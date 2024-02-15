@@ -1,0 +1,17 @@
+'''
+#Штука чтобы делать приветсвенное сообщение (не заработало)
+def welcome(message):
+    sti=open('Cats/1.webp', 'rb')
+    bot.send_sticker(message.chat.id, sti)
+
+    bot.send_message(message.chat.id, "Привет, меня когда-нибудь изобретут и я смогу отпралвтяь котов".format(message.from_user, bot.get_me()),
+                     parse_mode='html')
+
+
+# Отправка повторяющихся сособщений
+@bot.message_handler(content_types=['text'])
+
+def lalala(message):
+    bot.send_message(message.chat.id, message.text)
+
+'''
