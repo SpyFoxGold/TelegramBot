@@ -1,30 +1,45 @@
 import telebot
 import config
 import random
-
+from telebot import types
 
 bot=telebot.TeleBot(config.TOKEN)
 
 
-
+#Приветственное сообщение
 @bot.message_handler(commands=['start'])
 
 def welcome(message):
     sti=open('Cats/welcome.webp', 'rb')
     bot.send_sticker(message.chat.id, sti)
 
+
+#Клавиатура
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    item1 = types.KeyboardButton("/cats")
+    item2 = types.KeyboardButton("/dogs")
+
+    markup.add(item1, item2)
+
+#Вывод приветсвенного сообщения
     bot.send_message(message.chat.id, "Привет, меня когда-нибудь изобретут и я смогу отпралвтяь котов. Попробуй команду /help".format(message.from_user, bot.get_me()),
-                     parse_mode='html')
+                     parse_mode='html', reply_markup=markup)
 
 
 
 
+
+
+
+
+#команда помощи
 
 @bot.message_handler(commands=['help'])
 def help(message):
     bot.send_message(message.chat.id, "/cats /dogs".format(message.from_user, bot.get_me()), parse_mode='html' )
 
-
+#котики
+    
 @bot.message_handler(commands=['cats'])
 
 def cat(message):
@@ -52,7 +67,7 @@ def cat(message):
     bot.send_photo(message.chat.id, pho)
 
 
-
+#песики
 
 @bot.message_handler(commands=['dogs'])
 
@@ -81,7 +96,7 @@ def dog(message):
     bot.send_photo(message.chat.id, phot)
 
 
-
+#повторение сообщения если не котики и не песики
 
 @bot.message_handler(content_types=["text"])
 def lalala(message):
