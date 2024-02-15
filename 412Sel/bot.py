@@ -13,11 +13,16 @@ def welcome(message):
     sti=open('Cats/welcome.webp', 'rb')
     bot.send_sticker(message.chat.id, sti)
 
-    bot.send_message(message.chat.id, "Привет, меня когда-нибудь изобретут и я смогу отпралвтяь котов. Попробуй команду /cats".format(message.from_user, bot.get_me()),
+    bot.send_message(message.chat.id, "Привет, меня когда-нибудь изобретут и я смогу отпралвтяь котов. Попробуй команду /help".format(message.from_user, bot.get_me()),
                      parse_mode='html')
 
 
 
+
+
+@bot.message_handler(commands=['help'])
+def help(message):
+    bot.send_message(message.chat.id, "/cats /dogs".format(message.from_user, bot.get_me()), parse_mode='html' )
 
 
 @bot.message_handler(commands=['cats'])
@@ -45,6 +50,37 @@ def cat(message):
     elif number==10:
         pho=open('Cats/10.jpeg', 'rb')
     bot.send_photo(message.chat.id, pho)
+
+
+
+
+@bot.message_handler(commands=['dogs'])
+
+def dog(message):
+    number1 = random.randrange(1, 10)
+    if number1==1:
+        phot=open('Dogs/1.jpg', 'rb')
+    elif number1==2:
+        phot=open('Dogs/2.jpg', 'rb')
+    elif number1==3:
+        phot=open('Dogs/3.jpg', 'rb')
+    elif number1==4:
+        phot=open('Dogs/4.jpg', 'rb')
+    elif number1==5:
+        phot=open('Dogs/5.jpg', 'rb')
+    elif number1==6:
+        phot=open('Dogs/6.jpg', 'rb')
+    elif number1==7:
+        phot=open('Dogs/7.jpg', 'rb')
+    elif number1==8:
+        phot=open('Dogs/8.jpg', 'rb')
+    elif number1==9:
+        phot=open('Dogs/9.jpg', 'rb')
+    elif number1==10:
+        phot=open('Dogs/10.jpg', 'rb')
+    bot.send_photo(message.chat.id, phot)
+
+
 
 
 @bot.message_handler(content_types=["text"])
