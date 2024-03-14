@@ -2,8 +2,15 @@ import telebot
 import config
 import random
 from telebot import types
+import sqlite3
 
+
+#Описание бота, таблицы, и класса для апи
 bot=telebot.TeleBot(config.TOKEN)
+
+connection = sqlite3.connect('my_database.db', check_same_thread=False)
+cursor = connection.cursor()
+
 
 
 #Приветственное сообщение
@@ -12,7 +19,9 @@ bot=telebot.TeleBot(config.TOKEN)
 def welcome(message):
     sti=open('Cats/welcome.webp', 'rb')
     bot.send_sticker(message.chat.id, sti)
-
+    UserNameBase= message.from_user.username
+    cursor.execute('INSERT INTO Users (username, request) VALUES (?, ?)', (str(UserNameBase), '/start'))
+    connection.commit()
 
 #Клавиатура
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -37,11 +46,13 @@ def welcome(message):
 @bot.message_handler(commands=['help'])
 def help(message):
     bot.send_message(message.chat.id, "/cats /dogs".format(message.from_user, bot.get_me()), parse_mode='html' )
+    UserNameBase= message.from_user.username
+    cursor.execute('INSERT INTO Users (username, request) VALUES (?, ?)', (str(UserNameBase), '/help'))
+    connection.commit()
 
 #котики
     
 @bot.message_handler(commands=['cats'])
-
 def cat(message):
     number = random.randrange(1, 10)
     if number==1:
@@ -65,7 +76,9 @@ def cat(message):
     elif number==10:
         pho=open('Cats/10.jpeg', 'rb')
     bot.send_photo(message.chat.id, pho)
-
+    UserNameBase= message.from_user.username
+    cursor.execute('INSERT INTO Users (username, request) VALUES (?, ?)', (str(UserNameBase), '/cats'))
+    connection.commit()
 
 #песики
 
@@ -94,6 +107,10 @@ def dog(message):
     elif number1==10:
         phot=open('Dogs/10.jpg', 'rb')
     bot.send_photo(message.chat.id, phot)
+    UserNameBase = message.from_user.username
+    print(UserNameBase)
+    cursor.execute('INSERT INTO Users (username, request) VALUES (?, ?)', (str(UserNameBase), '/dogs'))
+    connection.commit()
 
 
 #повторение сообщения если не котики и не песики
@@ -101,8 +118,15 @@ def dog(message):
 @bot.message_handler(content_types=["text"])
 def lalala(message):
     bot.send_message(message.chat.id, message.text)
+    UserNameBase= message.from_user.username
+
+    MessageTextUser=message.text
+    cursor.execute('INSERT INTO Users (username, request) VALUES (?, ?)', (str(UserNameBase), MessageTextUser))
+    connection.commit()
 
 
 
 #RUNS
 bot.polling(none_stop=True)
+
+#connection.close()
